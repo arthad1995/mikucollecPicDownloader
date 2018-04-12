@@ -13,8 +13,10 @@ import javax.swing.BoxLayout;
 import javax.net.ssl.SSLEngineResult.Status;
 import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,6 +24,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 import javax.swing.Action;
 import javax.swing.JCheckBox;
@@ -287,6 +290,13 @@ public class MikuCollectDownloader {
 		status_label = new JLabel(" ");
 		status_label.setBounds(30, 412, 97, 14);
 		frame.getContentPane().add(status_label);
+		
+		
+		
+			MIkuPlusLo.setText(107+"");
+			MIkuPlusHi.setText(135+"");
+
+		
 	}
 	private class SwingAction extends AbstractAction {
 		public SwingAction() {
@@ -295,7 +305,12 @@ public class MikuCollectDownloader {
 		}
 		public void actionPerformed(ActionEvent e) {
 			
-			setUp();
+			try {
+				setUp();
+			} catch (IOException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			}
 			if(Miku_SSR_PLUS.isSelected()){
 				int lo = Integer.parseInt(MIkuPlusLo.getText());
 				int hi = Integer.parseInt(MIkuPlusHi.getText());
@@ -482,7 +497,7 @@ public class MikuCollectDownloader {
 	
 }
 	
-	private static void setUp(){
+	private void setUp() throws IOException{
 		File dir = new File("Cards");
 		if(!dir.exists())
 		dir.mkdir();
@@ -525,5 +540,28 @@ public class MikuCollectDownloader {
 		dir = new File("Cards//Announcement");
 		if(!dir.exists())
 		dir.mkdir();
+		File record = new File("Cards//data");
+		if(!record.exists()) {
+		record.createNewFile();		
+		String str = "135 107"
+				+ " 41 18"
+				+ " 35 20"
+				+ " 42 23"
+				+ " 31 13"
+				+ " 35 16";
+	    BufferedWriter writer = new BufferedWriter(new FileWriter(record));
+	    writer.write(str);
+	    writer.close();
+		}
+		Scanner s = new Scanner(record);
+			int mikuplus = s.nextInt();
+			MIkuPlusLo.setText(mikuplus+"");
+			MIkuPlusHi.setText(mikuplus+"");
+			int mikussr = s.nextInt();
+			MIkuLo.setText(mikussr+"");
+			MIkuHi.setText(mikussr+"");
+		
+	     
+	
 	}
 }
