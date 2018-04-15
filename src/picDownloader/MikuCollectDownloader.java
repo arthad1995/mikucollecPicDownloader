@@ -15,6 +15,7 @@ import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -71,7 +72,10 @@ public class MikuCollectDownloader {
 	private JCheckBox Meiko_SSR;
 	private JCheckBox announce_check;
 	private JTextField announce;
-	private JLabel status_label ;
+	private JLabel Event ;
+	private static int[] array;
+	private JTextField EventName;
+	private JCheckBox chckbxEvent ;
 
 	/**
 	 * Launch the application.
@@ -80,6 +84,7 @@ public class MikuCollectDownloader {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					array = new int[12];
 					MikuCollectDownloader window = new MikuCollectDownloader();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
@@ -91,23 +96,25 @@ public class MikuCollectDownloader {
 
 	/**
 	 * Create the application.
+	 * @throws FileNotFoundException 
 	 */
-	public MikuCollectDownloader() {
+	public MikuCollectDownloader() throws FileNotFoundException {
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws FileNotFoundException 
 	 */
-	private void initialize() {
+	private void initialize() throws FileNotFoundException {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 499);
+		frame.setBounds(100, 100, 450, 538);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JButton run = new JButton("run");
 		run.setAction(action);
-		run.setBounds(10, 437, 434, 23);
+		run.setBounds(10, 465, 434, 23);
 		frame.getContentPane().add(run);
 		
 		MIkuPlusLo = new JTextField();
@@ -287,15 +294,64 @@ public class MikuCollectDownloader {
 		announce_check.setBounds(30, 382, 97, 23);
 		frame.getContentPane().add(announce_check);
 		
-		status_label = new JLabel(" ");
-		status_label.setBounds(30, 412, 97, 14);
-		frame.getContentPane().add(status_label);
+		chckbxEvent = new JCheckBox("EventName");
+		chckbxEvent.setBounds(30, 408, 97, 23);
+		frame.getContentPane().add(chckbxEvent);
 		
+		EventName = new JTextField();
+		EventName.setBounds(133, 409, 149, 20);
+		frame.getContentPane().add(EventName);
+		EventName.setColumns(10);
+			
 		
+		Event = new JLabel(" ");
+		Event.setBounds(30, 440, 97, 14);
+		frame.getContentPane().add(Event);
 		
-			MIkuPlusLo.setText(107+"");
-			MIkuPlusHi.setText(135+"");
-
+		File record = new File("Cards//data");
+		if(!record.exists()) {
+			MIkuPlusLo.setText(135+"");
+			MIkuPlusHi.setText((135+10)+"");
+			MIkuLo.setText(107+"");
+			MIkuHi.setText((107+10)+"");
+			RinPlusLo.setText(41+"");
+			RinPlusHi.setText(41+10+"");
+			RinLo.setText(18+"");
+			RinHi.setText(18+10+"");
+			LenPLusLo.setText(35+"");
+			LenPLusHi.setText(35+10+"");
+			LenLo.setText(20+"");
+			LenHi.setText(20+10+"");
+			LukaPlusLo.setText(42+"");
+			LukaPlusHi.setText(42+10+"");
+			LukaLo.setText(23+"");
+			LukaHi.setText(23+10+"");
+			KaitoPlusLo.setText(41+"");
+			KaitoPlusHi.setText(41+10+"");
+			KaitoSSRLo.setText(13+"");
+			KaitoSSRHi.setText(13+10+"");
+			MeikoPLusLo.setText(35+"");
+			MeikoPLusHi.setText(35+10+"");
+			MeikoLo.setText(16+"");
+			MeikoHi.setText(16+10+"");	
+			array[0] = 135;
+			array[1] = 107;
+			array[2] = 41;
+			array[3] = 18;
+			array[4] = 35;
+			array[5] = 20;
+			array[6] = 42;
+			array[7] = 23;
+			array[8] = 41;
+			array[9] = 13;
+			array[10] = 35;
+			array[11] = 16;
+		}
+		else
+			read();
+		announce.setText(5+"");
+		
+	
 		
 	}
 	private class SwingAction extends AbstractAction {
@@ -315,8 +371,11 @@ public class MikuCollectDownloader {
 				int lo = Integer.parseInt(MIkuPlusLo.getText());
 				int hi = Integer.parseInt(MIkuPlusHi.getText());
 				try {
-					fetch(lo,hi,1080000,"Cards//Miku SSR+");
-					
+					int i =fetch(lo,hi,1080000,"Cards//Miku SSR+");
+					//System.out.println(i);
+					if(i>array[0]){
+						array[0] = i;
+					}					
 				} catch (MalformedURLException e1) {					
 				} catch (IOException e1) {				
 				}
@@ -326,8 +385,10 @@ public class MikuCollectDownloader {
 				int lo = Integer.parseInt(MIkuLo.getText());
 				int hi = Integer.parseInt(MIkuHi.getText());
 				try {
-					fetch(lo,hi,1070000,"Cards//Miku SSR");
-					
+					int i =fetch(lo,hi,1070000,"Cards//Miku SSR");
+					if(i>array[1]){
+						array[1] = i;
+					}
 				} catch (MalformedURLException e1) {					
 				} catch (IOException e1) {				
 				}
@@ -337,7 +398,10 @@ public class MikuCollectDownloader {
 				int lo = Integer.parseInt(RinPlusLo.getText());
 
 				try {
-					fetch(lo,hi,2080000,"Cards//Rin SSR+");
+					int i =fetch(lo,hi,2080000,"Cards//Rin SSR+");
+					if(i>array[2]){
+						array[2] = i;
+					}
 					
 				} catch (MalformedURLException e1) {					
 				} catch (IOException e1) {				
@@ -348,7 +412,10 @@ public class MikuCollectDownloader {
 				int lo = Integer.parseInt(RinLo.getText());
 
 				try {
-					fetch(lo,hi,2070000,"Cards//Rin SSR");
+					int i =fetch(lo,hi,2070000,"Cards//Rin SSR");
+					if(i>array[3]){
+						array[3] = i;
+					}
 					
 				} catch (MalformedURLException e1) {					
 				} catch (IOException e1) {				
@@ -360,7 +427,10 @@ public class MikuCollectDownloader {
 				int lo = Integer.parseInt(LenPLusLo.getText());
 
 				try {
-					fetch(lo,hi,3080000,"Cards//Len SSR+");
+					int i = fetch(lo,hi,3080000,"Cards//Len SSR+");
+					if(i>array[4]){
+						array[4] = i;
+					}
 					
 				} catch (MalformedURLException e1) {					
 				} catch (IOException e1) {				
@@ -371,7 +441,11 @@ public class MikuCollectDownloader {
 				int lo = Integer.parseInt(LenLo.getText());
 
 				try {
-					fetch(lo,hi,3070000,"Cards//Len SSR");
+					int i =fetch(lo,hi,3070000,"Cards//Len SSR");
+				
+					if(i>array[5]){
+						array[5] = i;
+					}
 					
 				} catch (MalformedURLException e1) {					
 				} catch (IOException e1) {				
@@ -383,7 +457,10 @@ public class MikuCollectDownloader {
 				int lo = Integer.parseInt(LukaPlusLo.getText());
 
 				try {
-					fetch(lo,hi,4080000,"Cards//Luka SSR+");
+					int i = fetch(lo,hi,4080000,"Cards//Luka SSR+");
+					if(i>array[6]){
+						array[6] = i;
+					}
 					
 				} catch (MalformedURLException e1) {					
 				} catch (IOException e1) {				
@@ -395,7 +472,10 @@ public class MikuCollectDownloader {
 				int lo = Integer.parseInt(LukaLo.getText());
 
 				try {
-					fetch(lo,hi,4070000,"Cards//Luka SSR");
+					int i =fetch(lo,hi,4070000,"Cards//Luka SSR");
+					if(i>array[7]){
+						array[7] = i;
+					}
 					
 				} catch (MalformedURLException e1) {					
 				} catch (IOException e1) {				
@@ -407,7 +487,10 @@ public class MikuCollectDownloader {
 				int lo = Integer.parseInt(MeikoPLusLo.getText());
 
 				try {
-					fetch(lo,hi,6080000,"Cards//Meiko SSR+");
+					int i = fetch(lo,hi,6080000,"Cards//Meiko SSR+");
+					if(i>array[10]){
+						array[10] = i;
+					}
 					
 				} catch (MalformedURLException e1) {					
 				} catch (IOException e1) {				
@@ -415,11 +498,14 @@ public class MikuCollectDownloader {
 			}
 			
 			if(Meiko_SSR.isSelected()){
-				int hi = Integer.parseInt(MeikoPLusHi.getText());
-				int lo = Integer.parseInt(MeikoPLusLo.getText());
+				int hi = Integer.parseInt(MeikoHi.getText());
+				int lo = Integer.parseInt(MeikoLo.getText());
 
 				try {
-					fetch(lo,hi,6070000,"Cards//Meiko SSR");
+					int i =fetch(lo,hi,6070000,"Cards//Meiko SSR");
+					if(i>array[11]){
+						array[11] = i;
+					}
 					
 				} catch (MalformedURLException e1) {					
 				} catch (IOException e1) {				
@@ -430,7 +516,10 @@ public class MikuCollectDownloader {
 				int lo = Integer.parseInt(KaitoPlusLo.getText());
 
 				try {
-					fetch(lo,hi,5080000,"Cards//Kaito SSR+");
+					int i = fetch(lo,hi,5080000,"Cards//Kaito SSR+");
+					if(i>array[8]){
+						array[8] = i;
+					}
 					
 				} catch (MalformedURLException e1) {					
 				} catch (IOException e1) {				
@@ -442,7 +531,10 @@ public class MikuCollectDownloader {
 				int lo = Integer.parseInt(KaitoSSRLo.getText());
 
 				try {
-					fetch(lo,hi,5070000,"Cards//Kaito SSR");
+					int i =fetch(lo,hi,5070000,"Cards//Kaito SSR");
+					if(i>array[9]){
+						array[9] = i;
+					}
 					
 				} catch (MalformedURLException e1) {					
 				} catch (IOException e1) {				
@@ -470,30 +562,91 @@ public class MikuCollectDownloader {
 				}
 				
 			}
-			status_label.setText("done");
+			if(chckbxEvent.isSelected()){
+				File file = new File("Cards//"+EventName.getText());
+				if(!file.exists()){
+					file.mkdir();		
+				}
+				String name =EventName.getText();
+				try {
+					fetchEvent(name + "/teki_1.png");
+					fetchEvent(name + "/teki_2.png");
+					fetchEvent(name + "/teki_3.png");
+					fetchEvent(name + "/teki_4.png");
+					fetchEvent(name + "/teki_5.png");
+					fetchEvent(name + "/icon_miku.png");
+					fetchEvent(name + "/icon_rin.png");
+					fetchEvent(name + "/icon_len.png");
+					fetchEvent(name + "/icon_meiko.png");
+					fetchEvent(name + "/icon_luka.png");
+					fetchEvent(name + "/icon_kaito.png");
+					fetchEvent(name + "/title_highscore.png");
+					fetchEvent(name + "/help_item.png");
+					
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+			Event.setText("done");
+			try {
+				write();
+			} catch (IOException e1) {
+	
+				e1.printStackTrace();
+			} 
 		}		
-		
-		
-		
 	}
-
-	private static void fetch(int start, int end,int val,String path) throws MalformedURLException, IOException{
+private static void fetchEvent(String name) throws MalformedURLException, IOException{
 		
-		for(int i = start ; i <end;i++){
+	
+		
 			try{
-			//	System.out.println(i);
-				//"https://web.gn.xb.org/img/cut/card/20800"+i+".png"
-			//	System.out.println("https://web.gn.xb.org/img/cut/card/"+(i+val)+".png");
-	URL website = new URL("https://web.gn.xb.org/img/cut/card/"+(i+val)+".png");
+	URL website = new URL("https://web.gn.xb.org/img/event/"+name);
+	//System.out.println("https://web.gn.xb.org/img/event/"+name);
 	ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-	//"Cards//Rin SSR+//"+i+".png"
-	FileOutputStream fos = new FileOutputStream(path+"//"+(i+val)+".png");
+	FileOutputStream fos = new FileOutputStream("Cards//"+name);
 	fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 		}
 			catch(IOException e){
 				
 			}
 	}
+	
+	
+
+	private void write() throws IOException{
+		File record = new File("Cards//data");
+		
+		
+		String str = "";
+		for(int i = 0 ; i < array.length;i++){
+			str = str +array[i]+" ";
+		}
+		//System.out.println(str);
+	    BufferedWriter writer = new BufferedWriter(new FileWriter(record));
+	    writer.write(str);
+	    writer.close();
+		
+	}
+	private static int fetch(int start, int end,int val,String path) throws MalformedURLException, IOException{
+		
+		int latest = 0;
+		for(int i = start ; i <end;i++){
+			try{
+	URL website = new URL("https://web.gn.xb.org/img/cut/card/"+(i+val)+".png");
+	//System.out.println("https://web.gn.xb.org/img/cut/card/"+(i+val)+".png");
+	ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+	FileOutputStream fos = new FileOutputStream(path+"//"+(i+val)+".png");
+	fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+	latest = i;
+		}
+			catch(IOException e){
+				
+			}
+	}
+		return latest;
 	
 }
 	
@@ -547,21 +700,63 @@ public class MikuCollectDownloader {
 				+ " 41 18"
 				+ " 35 20"
 				+ " 42 23"
-				+ " 31 13"
+				+ " 41 13"
 				+ " 35 16";
 	    BufferedWriter writer = new BufferedWriter(new FileWriter(record));
 	    writer.write(str);
 	    writer.close();
-		}
-		Scanner s = new Scanner(record);
-			int mikuplus = s.nextInt();
-			MIkuPlusLo.setText(mikuplus+"");
-			MIkuPlusHi.setText(mikuplus+"");
-			int mikussr = s.nextInt();
-			MIkuLo.setText(mikussr+"");
-			MIkuHi.setText(mikussr+"");
+		}	
+	}
+	private void read() throws FileNotFoundException{
 		
-	     
-	
+		Scanner s = new Scanner(new File("Cards//data"));
+		int i = s.nextInt();
+		array[0] = i;
+		MIkuPlusLo.setText(i+"");
+		MIkuPlusHi.setText((i+10)+"");
+		i = s.nextInt();
+		array[1] = i;
+		MIkuLo.setText(i+"");
+		MIkuHi.setText((i+10)+"");
+		i = s.nextInt();
+		array[2] = i;
+		RinPlusLo.setText(i+"");
+		RinPlusHi.setText(i+10+"");
+		i = s.nextInt();
+		array[3] = i;
+		RinLo.setText(i+"");
+		RinHi.setText(i+10+"");
+		i = s.nextInt();
+		array[4] = i;
+		LenPLusLo.setText(i+"");
+		LenPLusHi.setText(i+10+"");
+		i = s.nextInt();
+		array[5] = i;
+		LenLo.setText(i+"");
+		LenHi.setText(i+10+"");
+		i = s.nextInt();
+		array[6] = i;
+		LukaPlusLo.setText(i+"");
+		LukaPlusHi.setText(i+10+"");
+		i = s.nextInt();
+		array[7] = i;
+		LukaLo.setText(i+"");
+		LukaHi.setText(i+10+"");
+		i = s.nextInt();
+		array[8] = i;
+		KaitoPlusLo.setText(i+"");
+		KaitoPlusHi.setText(i+10+"");
+		i = s.nextInt();
+		array[9] = i;
+		KaitoSSRLo.setText(i+"");
+		KaitoSSRHi.setText(i+10+"");
+		i = s.nextInt();
+		array[10] = i;
+		MeikoPLusLo.setText(i+"");
+		MeikoPLusHi.setText(i+10+"");
+		i = s.nextInt();
+		array[11] = i;
+		MeikoLo.setText(i+"");
+		MeikoHi.setText(i+10+"");
 	}
 }
